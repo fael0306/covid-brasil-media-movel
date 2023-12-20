@@ -1,0 +1,16 @@
+library(dplyr)
+library(plyr)
+library(zoo)
+library(ggplot2)
+
+dados<-select(covid,location,date,new_cases)
+dados<-filter(dados,location=="Brazil")
+dados<-slice(dados,(nrow(dados)-59):(nrow(dados)))
+avg <- rollmean(dados[3],as.integer(sqrt(nrow(dados))))
+avg <- data.frame(avg)
+grafico1 = ggplot(data = avg,aes(x=row(avg)+6,y=new_cases))+xlab("Dias")+ylab("Média móvel")
+tendenciamediamovel = grafico1+geom_point(size=2.5)+geom_smooth(fill=NA)
+plot(tendenciamediamovel)
+# Gerando dados estatísticos
+summary(dados[3])
+summary(avg)
